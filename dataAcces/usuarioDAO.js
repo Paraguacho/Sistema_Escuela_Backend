@@ -9,7 +9,7 @@ class UsuarioDAO {
     /**
      * Crea un nuevo usuario en la base de datos.
      * La contraseña ya vendrá hasheada por el 'pre-save' hook del modelo.
-     * @param {object} datosUsuario - Datos del usuario a crear (nombre, correo, password, rol,)
+     * @param {object} datosUsuario - Datos del usuario a crear (nombre, email, password, rol,)
      * @returns {Promise<object>} El documento del usuario creado.
      */
     static async crearUsuario(datosUsuario) {
@@ -17,21 +17,21 @@ class UsuarioDAO {
             const usuario = new Usuario(datosUsuario);
             return await usuario.save();
         } catch (error) {
-            //Para manejar los errores como el correo duplicado o contraseña
+            //Para manejar los errores como el email duplicado o contraseña
             throw new Error(`Error al crear el usuario: ${error.message}`);
         }
     }
 
     /**
-     * Busca un usuario por su dirección de correo electrónico.
-     * @param {string} correo - El correo electrónico del usuario.
+     * Busca un usuario por su dirección de email electrónico.
+     * @param {string} email - El email electrónico del usuario.
      * @returns {Promise<object|null>} El documento del usuario si se encuentra, o null.
      */
-    static async buscarPorCorreo(correo) {
+    static async buscarPorCorreo(email) {
         try {
-            return await Usuario.findOne({ correo: correo });
+            return await Usuario.findOne({email});
         } catch (error) {
-            throw new Error(`Error al buscar usuario por correo: ${error.message}`);
+            throw new Error(`Error al buscar usuario por email: ${error.message}`);
         }
     }
 
