@@ -2,22 +2,27 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const tareaSchema = new Schema({
-    nombre: {
-        type: String, //Primer parcial - semestre etc
+    materia: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Materia',
         required: true,
-        trim: true
     },
-    fechaInicio: {
+    titulo: {
+        type: String,
+        required: true,
+        trim : true
+    },
+    descripcion: {
+        type: String,
+        required: true
+    },
+    fechaVencimiento: {
         type: Date,
         required: true
     },
-    fechaFinal: {
-        type: Date,
-        required: true
-    },
-    fechaLimiteCalificaciones:{
-        type: Date,
-        required: true //Fecha limite para que suban las calificaciones.
+    requiereAval: {
+        type: Boolean,
+        default: false
     }
 },{
     timestamps: true
