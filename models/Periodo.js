@@ -20,7 +20,7 @@ const periodoSchema = new Schema({
         required: true //Fecha limite para que suban las calificaciones.
     }
 },{
-    timestamps: true
+    timestamps: true,
 });
 
 

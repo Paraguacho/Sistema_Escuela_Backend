@@ -17,6 +17,21 @@ class InscripcionDAO {
     }
 
     /**
+     * Busca una inscripción específica por Estudiante, Materia y Periodo.
+     */
+    static async buscarInscripcion(idEstudiante, idMateria, idPeriodo) {
+        try {
+            return await Inscripcion.findOne({
+                estudiante: idEstudiante,
+                materia: idMateria,
+                periodo: idPeriodo
+            });
+        } catch (error) {
+            throw new Error(`Error al buscar la inscripción: ${error.message}`);
+        }
+    }
+
+    /**
      * Busca todas las inscripciones (materias) de un estudiante para un periodo.
      * @param {string} idEstudiante - El _id del Estudiante.
      * @param {string} idPeriodo - El _id del Periodo.

@@ -19,6 +19,17 @@ class PadreHijoDAO {
         }
     }
 
+    static async buscarVinculo(idPadre, idHijo) {
+        try {
+            return await PadreHijo.findOne({
+                padre: idPadre,
+                hijo: idHijo
+            });
+        } catch (error) {
+            throw new Error(`Error al buscar el vínculo: ${error.message}`);
+        }
+    }
+
     /**
      * Busca todos los hijos asociados a un ID de padre.
      * @param {string} idPadre - El _id del Usuario (Padre).
