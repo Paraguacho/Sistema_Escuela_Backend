@@ -24,5 +24,5 @@ const periodoSchema = new Schema({
 });
 
 
-const Periodo = mongoose.model('Periodo', usuarioSchema);
-module.exports = Periodo;
+const PeriodoEvaluacion = mongoose.model('Periodo', periodoSchema);
+module.exports = PeriodoEvaluacion;
