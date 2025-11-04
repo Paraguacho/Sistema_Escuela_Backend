@@ -179,7 +179,7 @@ class TareaController {
             // Notificar al Maestro
             const tarea = await TareaDAO.buscarPorId(entrega.tarea);
             await NotificacionDAO.crearNotificacion({
-                usuarioDestino: tarea.maestro,
+                usuarioDestino: tarea.materia.maestro, 
                 tipo: 'Tarea Avalada',
                 contenido: `La tarea "${tarea.titulo}" (entregada por ${entrega.estudiante.matricula}) ha sido avalada y está lista para calificar.`
             });

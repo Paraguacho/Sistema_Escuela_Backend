@@ -23,8 +23,7 @@ class TareaDAO {
      */
     static async buscarPorId(id) {
         try {
-            // .select('-password') excluye el campo de contraseña de la consulta
-            return await Tarea.findById(id);
+            return await Tarea.findById(id).populate('materia');
         } catch (error) {
             throw new Error(`Error al buscar tarea por ID: ${error.message}`);
         }

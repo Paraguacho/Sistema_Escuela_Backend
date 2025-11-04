@@ -15,6 +15,19 @@ class EntregaTareaDAO {
             throw new Error(`Error al crear la entrega de tarea: ${error.message}`);
         }
     }
+
+    /**
+         * Busca una tarea por su ID.
+         * @param {string} id - El _id de la tarea.
+         * @returns {Promise<object|null>} El documento del usuario (sin password), o null.
+         */
+        static async buscarPorId(id) {
+            try {
+                return await EntregaTarea.findById(id);
+            } catch (error) {
+                throw new Error(`Error al buscar tarea por ID: ${error.message}`);
+            }
+        }
     
     /**
      * Busca una entrega específica por Tarea y Estudiante.
