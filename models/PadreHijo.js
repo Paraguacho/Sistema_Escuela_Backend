@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 /**
  * Schema de relacion, 
  */
+//Cambio de nombre.
 const padreHijoSchema = new mongoose.Schema({
     padre: {
         type: mongoose.Schema.Types.ObjectId,
