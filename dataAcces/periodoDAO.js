@@ -21,12 +21,18 @@ class PeriodoDAO {
      * @returns {Promise<object|null>} El documento del periodo activo.
      */
     static async buscarPeriodoActivo() {
-        try {
-            const hoy = new Date();
-            return await PeriodoEvaluacion.findOne({
-                fechaInicio: { $lte: hoy }, // Menor o igual a hoy
-                fechaFin: { $gte: hoy }    // Mayor o igual a hoy
-            });
+    try {
+        const hoy = new Date();
+        const hoyInicioDelDia = new Date(hoy.setHours(0, 0, 0, 0)); 
+        
+        const query = {
+            fechaInicio: { $lte: hoyInicioDelDia }, // El periodo debe haber empezado ya
+            fechaFinal: { $gte: hoyInicioDelDia }  // Y no debe haber terminado aún
+        };
+        
+        const periodo = await PeriodoEvaluacion.findOne(query);
+        return periodo;
+
         } catch (error) {
             throw new Error(`Error al buscar el periodo activo: ${error.message}`);
         }

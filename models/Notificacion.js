@@ -8,7 +8,7 @@ const notificacionSchema = new mongoose.Schema({
     },
     tipo: {
         type: String,
-        enum: ['Bajo rendimiento','Tarea por vencer','Nuevo Mensaje','Tarea Avalada', 'Calificar Tarea', 'Tarea Calificada'],
+        enum: ['Bajo rendimiento','Tarea por vencer','Tarea por Avalar','Nuevo Mensaje','Tarea Avalada', 'Calificar Tarea', 'Tarea Calificada'],
         required: true
     },
     contenido: {

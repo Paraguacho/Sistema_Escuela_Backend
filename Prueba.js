@@ -9,7 +9,7 @@ const TareaDAO = require('./dataAcces/tareaDAO.js')
 const EntregaTareaDAO = require('./dataAcces/entregaTareaDAO.js');
 const MensajeDAO = require('./dataAcces/mensajeDAO.js');
 const NotificacionDAO = require('./dataAcces/notificacionDAO.js');
-
+require('dotenv').config();
 /**
  * Función principal de prueba que ejecuta todos los DAOs en secuencia.
  */
@@ -41,7 +41,7 @@ async function pruebaDaos() {
             email: 'juan.perez@gmail.com',
             password: 'password123',
             rol: 'Padre de Familia',
-            estadoCuenta: 'Activa'
+            estadoCuenta: 'Pendiente'
         });
         console.log('Padre creado:', padre.nombre, padre._id);
         

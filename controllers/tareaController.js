@@ -5,7 +5,7 @@ const EstudianteDAO = require('../dataAcces/estudianteDAO.js');
 const InscripcionDAO = require('../dataAcces/inscripcionDAO.js');
 const PadreHijoDAO = require('../dataAcces/padreHijoDAO.js');
 const NotificacionDAO = require('../dataAcces/notificacionDAO.js'); // Para notificar
-const PeriodoDAO= require('../dataAcces/periodoDAO.js')
+const PeriodoDAO = require('../dataAcces/periodoDAO.js');
 class TareaController {
 
     /**
@@ -91,20 +91,17 @@ class TareaController {
                 EstudianteDAO.buscarPorIdUsuario(usuarioEstudianteId),
                 PeriodoDAO.buscarPeriodoActivo()
             ]);
-            console.log('DEBUG (subirTarea):', {
-            tarea: tarea ? `OK (ID: ${tarea._id})` : '!! TAREA ES NULL !!',
-             estudiante: estudiante ? `OK (ID: ${estudiante._id})` : '!! ESTUDIANTE ES NULL !!',
-            periodoActivo: periodoActivo ? `OK (ID: ${periodoActivo._id})` : '!! PERIODO ES NULL !!'
-            });
-            
+        
             
 
             
-            if (!tarea || !estudiante ) {
+            if (!tarea || !estudiante || !periodoActivo) { 
                  return res.status(404).json({ message: 'No se encontró la tarea, el estudiante o el periodo activo.'});
             }
 
+            // Ya que periodoActivo no es null, se puede acceder a su propiedad ._id
             const inscripcion = await InscripcionDAO.buscarInscripcion(estudiante._id, tarea.materia, periodoActivo._id);
+
             if (!inscripcion) {
                 return res.status(403).json({ message: 'No puedes entregar una tarea de una materia a la que no estás inscrito.' });
             }
