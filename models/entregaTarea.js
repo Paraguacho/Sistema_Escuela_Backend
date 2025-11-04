@@ -36,7 +36,7 @@ const entregaTareaSchema = new Schema({
         type: Date,
     },
     padreQueAvaloTarea: {
-        type: moongose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Usuario'
     },
     fechaAvalado: {
