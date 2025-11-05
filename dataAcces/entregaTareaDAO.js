@@ -104,6 +104,26 @@ class EntregaTareaDAO {
     }
 
     /**
+     * Busca una entrega por su ID y popula (rellena) la información
+     * de la Tarea y la Materia anidadas.
+     * @param {string} id - El _id de la EntregaTarea.
+     * @returns {Promise<object|null>} El documento de entrega con datos anidados.
+     */
+    static async buscarPorIdPopulado(id) {
+        try {
+            
+            return await EntregaTarea.findById(id)
+                .populate({
+                    path: 'tarea', // Rellena el campo 'tarea' (de la Entrega)
+                    populate: {
+                        path: 'materia' // Rellena el campo 'materia' (DENTRO de la Tarea)
+                    }
+                });
+        } catch (error) {
+            throw new Error(`Error al buscar entrega populada por ID: ${error.message}`);
+        }
+    }
+    /**
      * Actualiza una entrega de tarea (para avalar, calificar, etc.)
      * @param {string} idEntrega - El _id de la EntregaTarea.
      * @param {object} datosActualizar - Objeto con los campos a actualizar (ej. { estado, calificacion, padreQueAvalo, ... })

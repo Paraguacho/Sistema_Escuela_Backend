@@ -63,6 +63,19 @@ class EstudianteDAO {
             throw new Error(`Error al eliminar el estudiante: ${error.message}`);
         }
     }
+    /**
+         * Busca un usuario por su ID.
+         * Por defecto, excluye la contraseña de la respuesta.
+         * @param {string} id - El _id del usuario.
+         * @returns {Promise<object|null>} El documento del usuario (sin password), o null.
+         */
+        static async buscarPorId(idEstudiante) {
+            try {
+                return await Estudiante.findById(idEstudiante);
+            } catch (error) {
+                throw new Error(`Error al buscar estudiante por ID: ${error.message}`);
+            }
+        }
     
 }
 

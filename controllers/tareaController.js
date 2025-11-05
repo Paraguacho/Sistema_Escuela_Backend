@@ -212,14 +212,14 @@ class TareaController {
                 return res.status(400).json({ message: 'La calificación es requerida.' });
             }
 
-            // 2. Validación de Propiedad: ¿Este maestro es el de la materia de esta entrega?
-            const entrega = await EntregaTareaDAO.buscarPorIdPopulado(entregaId); // Necesitamos un DAO que popule 'tarea'
+            const entrega = await EntregaTareaDAO.buscarPorIdPopulado(entregaId); 
+            // Esta validación ya comprueba todo lo que necesitamos
             if (!entrega || !entrega.tarea || !entrega.tarea.materia) {
-                 return res.status(404).json({ message: 'Entrega o Tarea no encontrada.' });
+                 return res.status(404).json({ message: 'Entrega, Tarea o Materia no encontrada.' });
             }
+            const materia = entrega.tarea.materia; 
             
-            const materia = await MateriaDAO.buscarPorId(entrega.tarea.materia);
-            if (!materia || materia.maestro.toString() !== maestroId.toString()) {
+            if (materia.maestro.toString() !== maestroId.toString()) {
                 return res.status(403).json({ message: 'No tienes permiso para calificar tareas de esta materia.' });
             }
 
