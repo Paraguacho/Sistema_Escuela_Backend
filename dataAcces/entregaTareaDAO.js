@@ -1,4 +1,5 @@
 const EntregaTarea = require('../models/entregaTarea.js');
+const Tarea = require('../models/Tarea.js');
 
 class EntregaTareaDAO {
 

@@ -278,7 +278,7 @@ class TareaController {
     static async obtenerProgresoTareas(req, res) {
         try {
             const { materiaId } = req.params;
-            const { estudianteId } = req.query; // El ID del Estudiante (NO del usuario)
+            const { estudianteId } = req.body; // El ID del Estudiante (NO del usuario)
             const usuarioAutenticado = req.usuario;
 
             if (!estudianteId) {
