@@ -19,7 +19,7 @@ class TareaController {
             const maestroId = req.usuario._id;
             const rolMaestro = req.usuario.rol;
 
-            // 1. Autorización: Solo Maestros
+            // Autorización: Solo Maestros
             if (rolMaestro !== 'Maestro') {
                 return res.status(403).json({ message: 'Acceso prohibido. Solo los maestros pueden crear tareas.' });
             }
@@ -79,12 +79,12 @@ class TareaController {
             const { tareaId } = req.params;
             const { contenidoTexto, archivoUrl } = req.body; 
 
-            // Autorización: Solo Estudiantes
+            // Autorización Solo Estudiantes
             if (rolEstudiante !== 'Estudiante') {
                 return res.status(403).json({ message: 'Acceso prohibido. Solo los estudiantes pueden entregar tareas.' });
             }
 
-            // Validación de Propiedad: Este estudiante está inscrito en la materia de esta tarea
+            // Validación de Propiedad Este estudiante está inscrito en la materia de esta tarea
             const [tarea, estudiante, periodoActivo] = await Promise.all([
                 
                 TareaDAO.buscarPorId(tareaId),
@@ -99,7 +99,7 @@ class TareaController {
                  return res.status(404).json({ message: 'No se encontró la tarea, el estudiante o el periodo activo.'});
             }
 
-            // Ya que periodoActivo no es null, se puede acceder a su propiedad ._id
+            // Ya que periodoActivo no es null se puede acceder a su propiedad ._id
             const inscripcion = await InscripcionDAO.buscarInscripcion(estudiante._id, tarea.materia, periodoActivo._id);
 
             if (!inscripcion) {
@@ -116,7 +116,7 @@ class TareaController {
                 fechaEntregada: new Date()
             });
 
-            // 4. Notificar al Padre (si requiere aval) y al Maestro
+            // 4. Notificar al Padre si requiere aval y al Maestro
             if (tarea.requiereAval) {
                 const padres = await PadreHijoDAO.buscarPadresPorHijo(estudiante._id);
                 for (const vinculo of padres) {
@@ -147,12 +147,12 @@ class TareaController {
             const rolPadre = req.usuario.rol;
             const { entregaId } = req.params;
 
-            // Autorización: Solo Padres
+            // Autorizacion Solo Padres
             if (rolPadre !== 'Padre de Familia') {
                 return res.status(403).json({ message: 'Acceso prohibido. Solo los padres pueden avalar tareas.' });
             }
 
-            // Validación de Propiedad: ¿Este padre es tutor del estudiante que hizo esta entrega?
+            // Validación de Propiedad ¿Este padre es tutor del estudiante que hizo esta entrega?
             const entrega = await EntregaTareaDAO.buscarPorId(entregaId);
             if (!entrega) {
                 return res.status(404).json({ message: 'Entrega no encontrada.' });
@@ -163,7 +163,7 @@ class TareaController {
                 return res.status(403).json({ message: 'No tienes permiso para avalar la tarea de este estudiante.' });
             }
 
-            // Validación de Estado: Solo se puede avalar si está 'Entregada'
+            // Validación de Estado Solo se puede avalar si está Entregada
             if (entrega.estado !== 'Entregada') {
                 return res.status(409).json({ message: `No se puede avalar. Estado actual: ${entrega.estado}` });
             }
@@ -204,7 +204,7 @@ class TareaController {
             const { entregaId } = req.params;
             const { calificacion, comentariosMaestro } = req.body;
 
-            // 1. Autorización: Solo Maestros
+            //  Autorización Solo Maestros
             if (rolMaestro !== 'Maestro') {
                 return res.status(403).json({ message: 'Acceso prohibido. Solo los maestros pueden calificar.' });
             }
@@ -213,7 +213,6 @@ class TareaController {
             }
 
             const entrega = await EntregaTareaDAO.buscarPorIdPopulado(entregaId); 
-            // Esta validación ya comprueba todo lo que necesitamos
             if (!entrega || !entrega.tarea || !entrega.tarea.materia) {
                  return res.status(404).json({ message: 'Entrega, Tarea o Materia no encontrada.' });
             }
@@ -223,7 +222,7 @@ class TareaController {
                 return res.status(403).json({ message: 'No tienes permiso para calificar tareas de esta materia.' });
             }
 
-            // 3. Validación de Estado: Solo se puede calificar si está 'Avalada' (o 'Entregada' si no requiere aval)
+            // Validación de Estado Solo se puede calificar si está Avalada o 'Entregada' si no requiere aval
             const tarea = entrega.tarea;
             const estadoRequerido = tarea.requiereAval ? 'Avalada' : 'Entregada';
             
@@ -278,14 +277,14 @@ class TareaController {
     static async obtenerProgresoTareas(req, res) {
         try {
             const { materiaId } = req.params;
-            const { estudianteId } = req.body; // El ID del Estudiante (NO del usuario)
+            const { estudianteId } = req.body; // El ID del Estudiante NO DEL USUARIO IMPORTANTE ESTO
             const usuarioAutenticado = req.usuario;
 
             if (!estudianteId) {
                 return res.status(400).json({ message: 'El ID del estudiante es requerido.' });
             }
 
-            //  Autorización:
+            //  Autorización
             const estudiante = await EstudianteDAO.buscarPorId(estudianteId);
             if (!estudiante) return res.status(404).json({ message: 'Estudiante no encontrado.' });
             
