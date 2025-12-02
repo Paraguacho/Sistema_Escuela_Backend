@@ -48,7 +48,9 @@ class AuthController {
                 const estudiante = await EstudianteDAO.buscarPorIdUsuario(usuario._id);
                 if (estudiante) {
                     datosExtra.estudianteId = estudiante._id;
+                    datosExtra.matricula = estudiante.matricula; 
                 }
+            
             } else if (usuario.rol === 'Padre de Familia') {
                 const hijos = await PadreHijoDAO.buscarHijosPorPadre(usuario._id);
                 datosExtra.hijos = hijos; // Enviamos la lista de hijos
