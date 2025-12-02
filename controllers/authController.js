@@ -2,6 +2,8 @@ const UsuarioDAO = require('../dataAcces/usuarioDAO');
 //Importar jwt para crear el token
 const jwt = require('jsonwebtoken');
 //Importar dotenv para variable de entorno
+const EstudianteDAO = require('../dataAcces/estudianteDAO.js');
+const PadreHijoDAO = require('../dataAcces/padreHijoDAO.js');
 require('dotenv').config();
 class AuthController {
 
@@ -40,9 +42,17 @@ class AuthController {
                 rol: usuario.rol
             };
 
-            const token = jwt.sign(payload, process.env.JWT_SECRET, {
-                expiresIn: '1d' // El token expira en 1 día
-            });
+            const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
+            let datosExtra = {};
+            if (usuario.rol === 'Estudiante') {
+                const estudiante = await EstudianteDAO.buscarPorIdUsuario(usuario._id);
+                if (estudiante) {
+                    datosExtra.estudianteId = estudiante._id;
+                }
+            } else if (usuario.rol === 'Padre de Familia') {
+                const hijos = await PadreHijoDAO.buscarHijosPorPadre(usuario._id);
+                datosExtra.hijos = hijos; // Enviamos la lista de hijos
+            }
 
             // Enviar la respuesta exitosa
             res.status(200).json({
@@ -51,7 +61,8 @@ class AuthController {
                 usuario: {
                     id: usuario._id,
                     nombre: usuario.nombre,
-                    rol: usuario.rol
+                    rol: usuario.rol,
+                    ...datosExtra 
                 }
             });
 
