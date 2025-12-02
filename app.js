@@ -2,6 +2,7 @@ const express = require('express');
 const Database = require('./config/Database'); 
 const authRoutes = require('./routes/authRoutes.js');
 const tareaRoutes = require('./routes/tareaRoutes.js');
+const inscripcionRoutes = require('./routes/inscripcionRoutes.js');
 
 require('dotenv').config(); // Carga las variables de .env
 
@@ -13,6 +14,7 @@ app.use(express.json()); // Para que Express -> JSON
 
 // deben empezar con el prefijo /api/auth
 app.use('/api/auth', authRoutes);
+app.use('/api/inscripciones', inscripcionRoutes);
 app.use('/api/tareas', tareaRoutes);
 
 // Conectar a la BD e iniciar el servidor
