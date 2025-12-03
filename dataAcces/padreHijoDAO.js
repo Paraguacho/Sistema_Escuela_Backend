@@ -37,7 +37,15 @@ class PadreHijoDAO {
      */
     static async buscarHijosPorPadre(idPadre) {
         try {
-            return await PadreHijo.find({ padre: idPadre }).populate('hijo');
+            
+            return await PadreHijo.find({ padre: idPadre })
+                .populate({
+                    path: 'hijo',
+                    populate: {
+                        path: 'usuario',
+                        select: 'nombre apellido' // Solo trae nombre y apellido
+                    }
+                });
         } catch (error) {
             throw new Error(`Error al buscar hijos por padre: ${error.message}`);
         }

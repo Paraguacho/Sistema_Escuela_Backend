@@ -318,17 +318,23 @@ class TareaController {
 
             const progreso = tareas.map(tarea => {
                 const entrega = mapaEntregas.get(tarea._id.toString());
+                
                 return {
+                    id: tarea._id, 
                     tarea: tarea.titulo,
+                    descripcion: tarea.descripcion, // <--- AGREGAR: Instrucciones
                     fechaVencimiento: tarea.fechaVencimiento,
                     requiereAval: tarea.requiereAval,
                     entrega: entrega ? {
+                        id: entrega._id,
                         estado: entrega.estado,
                         calificacion: entrega.calificacion,
                         comentarios: entrega.comentariosMaestro,
+                        contenidoTexto: entrega.contenidoTexto,
+                        archivoUrl: entrega.archivoUrl,
                         fechaEntregada: entrega.fechaEntregada,
                         fechaAvalado: entrega.fechaAvalado
-                    } : null // No entregada
+                    } : null
                 };
             });
 

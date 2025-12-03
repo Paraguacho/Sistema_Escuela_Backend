@@ -1,6 +1,7 @@
 const InscripcionDAO = require('../dataAcces/inscripcionDAO.js');
 const EstudianteDAO = require('../dataAcces/estudianteDAO.js');
 const PeriodoDAO = require('../dataAcces/periodoDAO.js');
+const PadreHijoDAO = require('../dataAcces/padreHijoDAO.js');
 
 class InscripcionController {
 
@@ -12,26 +13,54 @@ class InscripcionController {
         try {
             const usuarioId = req.usuario._id;
             const rol = req.usuario.rol;
+            
+            // Variable para guardar el ID del alumno del que buscaremos materias
+            let idEstudianteAConsultar;
 
-            // 1. Solo estudiantes (o padres, si implementas esa lógica después)
-            if (rol !== 'Estudiante') {
-                return res.status(403).json({ message: 'Solo los estudiantes pueden ver sus materias.' });
+            // CASO 1: El usuario es ESTUDIANTE
+            if (rol === 'Estudiante') {
+                // Se busca a sí mismo en la tabla de estudiantes
+                const estudiante = await EstudianteDAO.buscarPorIdUsuario(usuarioId);
+                if (!estudiante) {
+                    return res.status(404).json({ message: 'Perfil de estudiante no encontrado.' });
+                }
+                idEstudianteAConsultar = estudiante._id;
+            } 
+            // CASO 2: El usuario es PADRE DE FAMILIA
+            else if (rol === 'Padre de Familia') {
+                // El padre debe enviar el ID del hijo en la URL (?estudianteId=...)
+                const { estudianteId } = req.query; 
+
+                if (!estudianteId) {
+                    return res.status(400).json({ message: 'Debes especificar el ID del estudiante a consultar.' });
+                }
+
+                // Validamos que sea SU hijo
+                const vinculo = await PadreHijoDAO.buscarVinculo(usuarioId, estudianteId);
+                if (!vinculo) {
+                    return res.status(403).json({ message: 'No tienes permiso para ver las materias de este estudiante.' });
+                }
+                
+                idEstudianteAConsultar = estudianteId;
+            } 
+            else {
+                return res.status(403).json({ message: 'Rol no autorizado.' });
             }
 
-            // 2. Obtener datos necesarios
-            const estudiante = await EstudianteDAO.buscarPorIdUsuario(usuarioId);
-            if (!estudiante) return res.status(404).json({ message: 'Perfil de estudiante no encontrado.' });
-
+            // --- Lógica Común (Ahora sí segura) ---
+            
             const periodoActivo = await PeriodoDAO.buscarPeriodoActivo();
-            if (!periodoActivo) return res.status(404).json({ message: 'No hay un periodo escolar activo.' });
+            if (!periodoActivo) {
+                return res.status(404).json({ message: 'No hay un periodo escolar activo.' });
+            }
 
-            // 3. Buscar inscripciones usando el DAO
+            // Usamos la variable 'idEstudianteAConsultar' que definimos en los IFs de arriba
             const inscripciones = await InscripcionDAO.buscarMateriasPorEstudiante(
-                estudiante._id, 
+                idEstudianteAConsultar, 
                 periodoActivo._id
             );
 
-            // 4. Formatear la respuesta para que sea limpia
+            // Formatear respuesta
             const materias = inscripciones.map(ins => ({
                 id: ins.materia._id,
                 nombre: ins.materia.nombre,
